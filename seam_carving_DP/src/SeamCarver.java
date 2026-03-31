@@ -1,6 +1,6 @@
 import edu.princeton.cs.algs4.Picture;
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Stack;
 
@@ -22,16 +22,19 @@ public class SeamCarver {
             dp.add(row);
         }
     }
+    public Picture picture() {
+        return picture;
+    }
     public int width() {
         return picture.width();
     }
     public int height() {
         return picture.height();
     }
-    public boolean isValidCoordinate(int x, int y) {
+    private boolean isValidCoordinate(int x, int y) {
         return x >= 0 && y >= 0 && x < picture.width() && y < picture.height();
     }
-    public boolean isBorder(int x, int y) {
+    private boolean isBorder(int x, int y) {
         return x == 0 || y == 0 || x == picture.width() - 1 || y == picture.height() - 1;
     }
     public double energy(int x, int y){
@@ -51,7 +54,7 @@ public class SeamCarver {
                         +(c1.getBlue() - c2.getBlue()) * (c1.getBlue() - c2.getBlue());
         return Math.sqrt(delta_x + delta_y);
     }
-    void prepare() {
+    private void prepare() {
         for (int i = 0; i < picture.height(); ++ i) {
             for (int j = 0; j < picture.width(); ++ j) {
                 dp.get(i).set(j, oo);
@@ -157,7 +160,7 @@ public class SeamCarver {
         }
         return a;
     }
-    public boolean checkSeam(int[] seam, int mx) {
+    private boolean checkSeam(int[] seam, int mx) {
         for(int i = 0; i < seam.length; ++ i) {
             if (seam[i] >= mx || seam[i] < 0) {
                 return false;
@@ -181,10 +184,10 @@ public class SeamCarver {
         Picture newp = new Picture(width(), height()-1);
         for(int col = 0; col < width(); ++ col) {
             for (int row = 0; row < seam[col]; ++ row) {
-                newp.setARGB(col row, picture.getARGB(col, row));
+                newp.set(col, row, picture.get(col, row));
             }
             for (int row = seam[col]+1; row < height(); ++ row) {
-                newp.setARGB(col, row-1, picture.getARGB(col, row));
+                newp.set(col, row-1, picture.get(col, row));
             }
         }
         picture = newp;
@@ -202,10 +205,10 @@ public class SeamCarver {
         Picture newp = new Picture(width()-1, height());
         for (int row = 0; row < height(); ++ row) {
             for (int col = 0; col < seam[row]; ++ col) {
-                newp.setARGB(col, row, picture.getARGB(col, row));
+                newp.set(col, row, picture.get(col, row));
             }
             for (int col = seam[row] + 1; col < width(); ++ col) {
-                newp.setARGB(col-1, row, picture.getARGB(col, row));
+                newp.set(col-1, row, picture.get(col, row));
             }
         }
         picture = newp;
